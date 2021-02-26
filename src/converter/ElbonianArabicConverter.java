@@ -89,6 +89,7 @@ public class ElbonianArabicConverter {
         ArrayList<String> components = new ArrayList<>();
         while(matcher.find())
             components.add(matcher.group());
+        System.out.println("Check that I can push");
 
 
 
