@@ -59,44 +59,28 @@ public class ElbonianArabicConverter {
         // cC cannot be followed by L,X but xX is ok
         // xX cannot be followed by V,I
         // TODO check to see if the number is valid, then set it equal to the string
-        this.number = number;
         try{
             int i = Integer.parseInt(number);
             if (i > 4000)
-                throw new ValueOutOfBoundsException("Provided Arabic Number exceeds 4000!");
+                throw new ValueOutOfBoundsException("Provided Arabic Number is too high!(Greater than 4000)");
             if (i < 1)
-                throw new ValueOutOfBoundsException("Provided Arabic Number is less than 1!");
-            return;
+                throw new ValueOutOfBoundsException("Provided Arabic Number is too low!(Less than 1)");
         } catch (NumberFormatException e){
             try {
                 Double.parseDouble(number);
-                throw new ValueOutOfBoundsException("Provided Arabic Number needs to be an Integer!");
+                throw new ValueOutOfBoundsException("Provided Arabic Number needs to be an Integer!(Double was provided)");
             } catch (NumberFormatException ignored){
+                if(!number.trim().matches("^M{0,3}(mM|D?(dD|C{0,3}))(cC|L?(lL|X{0,3}))(xX|V?(vV|I{0,3}))$"))
+                    throw new MalformedNumberException("Provided Elbonian Numeral is invalid!");
             }
         }
 
-        if(!number.matches("[MDCLXVImdxlxv]+"))
-            throw new MalformedNumberException("Provided string contains invalid characters");
+        this.number = number;
 
-        if(number.chars().filter(c->c=='D').count() > 1 ||
-                number.chars().filter(c->c=='L').count() > 1 ||
-                number.chars().filter(c->c=='V').count() > 1)
-            throw new MalformedNumberException("D, L, & V can only appear once in a string!");
-
-        Pattern pattern = Pattern.compile("M*m*M+|D*d*D+|C*c*C+|L*l*L+|X*x*X+|V*v*V+|I+");
-        Matcher matcher = pattern.matcher(number);
-
-        ArrayList<String> components = new ArrayList<>();
-        while(matcher.find())
-            components.add(matcher.group());
-        System.out.println("Check that I can push");
-
-
-
-
-
-
-
+//        if(number.chars().filter(c->c=='D').count() > 1 ||
+//                number.chars().filter(c->c=='L').count() > 1 ||
+//                number.chars().filter(c->c=='V').count() > 1)
+//            throw new MalformedNumberException("D, L, & V can only appear once in a string!");
     }
 
     /**
@@ -107,7 +91,59 @@ public class ElbonianArabicConverter {
      */
     public int toArabic() {
         // TODO Fill in the method's body
-        return 1;
+        int arabicNum = 0;
+
+        Pattern pattern = Pattern.compile("[MDCLXVI]|mM|dD|cC|lL|xX|vV");
+        Matcher matcher = pattern.matcher(number);
+
+        ArrayList<String> components = new ArrayList<>();
+        while(matcher.find())
+            components.add(matcher.group());
+        for(String s: components){
+            switch (s){
+                case "M":
+                    arabicNum += 1000;
+                    break;
+                case "D":
+                    arabicNum += 500;
+                    break;
+                case "C":
+                    arabicNum += 100;
+                    break;
+                case "L":
+                    arabicNum += 50;
+                    break;
+                case "X":
+                    arabicNum += 10;
+                    break;
+                case "V":
+                    arabicNum += 5;
+                    break;
+                case "I":
+                    arabicNum += 1;
+                    break;
+                case "mM":
+                    arabicNum += 900;
+                    break;
+                case "dD":
+                    arabicNum += 400;
+                    break;
+                case "cC":
+                    arabicNum += 90;
+                    break;
+                case "lL":
+                    arabicNum += 40;
+                    break;
+                case "xX":
+                    arabicNum += 9;
+                    break;
+                case "vV":
+                    arabicNum += 4;
+                    break;
+            }
+        }
+        System.out.println(components);
+        return arabicNum;
     }
 
     /**
@@ -117,7 +153,19 @@ public class ElbonianArabicConverter {
      */
     public String toElbonian() {
         // TODO Fill in the method's body
-        return "I";
+        int arabic = Integer.parseInt(number.trim());
+        String elbonian = "";
+        int[] aParts = {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};
+        String[] eParts = {"M", "mM", "D", "dD", "C", "cC", "L", "lL", "X", "xX", "V", "vV", "I"};
+
+        for(int i = 0; i < 13; i++){
+            while(arabic >= aParts[i]){
+                elbonian += eParts[i];
+                arabic -= aParts[i];
+            }
+        }
+
+        return elbonian;
     }
 
 }
