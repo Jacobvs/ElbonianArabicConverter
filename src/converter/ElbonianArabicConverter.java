@@ -24,8 +24,6 @@ public class ElbonianArabicConverter {
     int[] aParts = {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};
     String[] eParts = {"M", "mM", "D", "dD", "C", "cC", "L", "lL", "X", "xX", "V", "vV", "I"};
 
-    private final Map<String, Integer[]> valueMap = new HashMap<>();
-
     /**
      * Constructor for the ElbonianArabic class that takes a string. The string should contain a valid
      * Elbonian or Arabic numeral. The String can have leading or trailing spaces. But there should be no
@@ -40,13 +38,6 @@ public class ElbonianArabicConverter {
      * in the Elbonian number system.
      */
     public ElbonianArabicConverter(String number) throws MalformedNumberException, ValueOutOfBoundsException {
-        valueMap.put("M", new Integer[]{1000, 100});
-        valueMap.put("D", new Integer[]{500, 100});
-        valueMap.put("C", new Integer[]{100, 10});
-        valueMap.put("L", new Integer[]{50, 10});
-        valueMap.put("X", new Integer[]{10, 1});
-        valueMap.put("V", new Integer[]{5, 1});
-        valueMap.put("I", new Integer[]{1, 0});
         // Elbonian Numerals: M, D, C, L, X, V, I
         // lowercase Numerals: m, d, c, l, x, v
         // M,C,X,I repeated up to 3x (XX=20)(MMM=3k)
@@ -60,7 +51,6 @@ public class ElbonianArabicConverter {
         // mM cannot be followed by D,C but cC is ok
         // cC cannot be followed by L,X but xX is ok
         // xX cannot be followed by V,I
-        // TODO check to see if the number is valid, then set it equal to the string
         try{
             int i = Integer.parseInt(number);
             if (i > 4000)
@@ -78,11 +68,6 @@ public class ElbonianArabicConverter {
         }
 
         this.number = number;
-
-//        if(number.chars().filter(c->c=='D').count() > 1 ||
-//                number.chars().filter(c->c=='L').count() > 1 ||
-//                number.chars().filter(c->c=='V').count() > 1)
-//            throw new MalformedNumberException("D, L, & V can only appear once in a string!");
     }
 
     /**
@@ -92,7 +77,6 @@ public class ElbonianArabicConverter {
      * @return An arabic value
      */
     public int toArabic() {
-        // TODO Fill in the method's body
         int arabicNum = 0;
 
         Pattern pattern = Pattern.compile("[MDCLXVI]|mM|dD|cC|lL|xX|vV");
@@ -118,7 +102,6 @@ public class ElbonianArabicConverter {
      * @return An Elbonian value
      */
     public String toElbonian() {
-        // TODO Fill in the method's body
         int arabic = Integer.parseInt(number.trim());
         String elbonian = "";
 

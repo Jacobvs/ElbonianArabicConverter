@@ -168,5 +168,4 @@ public class ConverterTests {
     public void valueOutOfBoundsTest4() throws MalformedNumberException, ValueOutOfBoundsException {
         converter = new ElbonianArabicConverter("-46");
     }
-    // TODO Add more test cases
 }
