@@ -21,6 +21,8 @@ public class ElbonianArabicConverter {
 
     // A string that holds the number (Elbonian or Arabic) you would like to convert
     private final String number;
+    int[] aParts = {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};
+    String[] eParts = {"M", "mM", "D", "dD", "C", "cC", "L", "lL", "X", "xX", "V", "vV", "I"};
 
     private final Map<String, Integer[]> valueMap = new HashMap<>();
 
@@ -99,50 +101,14 @@ public class ElbonianArabicConverter {
         ArrayList<String> components = new ArrayList<>();
         while(matcher.find())
             components.add(matcher.group());
+        int i = 0;
         for(String s: components){
-            switch (s){
-                case "M":
-                    arabicNum += 1000;
-                    break;
-                case "D":
-                    arabicNum += 500;
-                    break;
-                case "C":
-                    arabicNum += 100;
-                    break;
-                case "L":
-                    arabicNum += 50;
-                    break;
-                case "X":
-                    arabicNum += 10;
-                    break;
-                case "V":
-                    arabicNum += 5;
-                    break;
-                case "I":
-                    arabicNum += 1;
-                    break;
-                case "mM":
-                    arabicNum += 900;
-                    break;
-                case "dD":
-                    arabicNum += 400;
-                    break;
-                case "cC":
-                    arabicNum += 90;
-                    break;
-                case "lL":
-                    arabicNum += 40;
-                    break;
-                case "xX":
-                    arabicNum += 9;
-                    break;
-                case "vV":
-                    arabicNum += 4;
-                    break;
-            }
+            if(! (i < 13))
+                break;
+            while(!s.equals(eParts[i]))
+                i++;
+            arabicNum += aParts[i];
         }
-        System.out.println(components);
         return arabicNum;
     }
 
@@ -155,8 +121,6 @@ public class ElbonianArabicConverter {
         // TODO Fill in the method's body
         int arabic = Integer.parseInt(number.trim());
         String elbonian = "";
-        int[] aParts = {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};
-        String[] eParts = {"M", "mM", "D", "dD", "C", "cC", "L", "lL", "X", "xX", "V", "vV", "I"};
 
         for(int i = 0; i < 13; i++){
             while(arabic >= aParts[i]){
